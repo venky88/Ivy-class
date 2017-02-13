@@ -1,4 +1,4 @@
-package org.learning.spark.ivy.sample;
+package com.venky.ivy;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,21 +30,23 @@ public class CSVReader {
 		// Create a Java version of the Spark Context from the configuration
 		JavaSparkContext sc = new JavaSparkContext(conf);
 		SQLContext context = new SQLContext(sc);
-		DataFrame df = context.read().format("com.databricks.spark.csv").option("header", "true").load(path);
+		
+		// read csv file
+		DataFrame df = context.read().format("com.databricks.spark.csv").option("header", "true").load(path); //.formate("org.apache.spark.csv")
 		df.show();
 		df.registerTempTable("temp");
 		df = context.sql("select name, count*23 as count from temp");
 		df.show();
-		writeIntoExcel("output.csv", df.collect());
+		writeIntoCsv("output.csv", df.collect());
 
 	}
 
-	public static void writeIntoExcel(String file, org.apache.spark.sql.Row[] rows) {
+	public static void writeIntoCsv(String file, org.apache.spark.sql.Row[] rows) {
 		System.out.println("hihssssssssssssssssssssssssssssssssssssssssssssss");
 		File file1 = new File(file);
 		try {
 
-			FileWriter fileWriter = new FileWriter(file1);
+			FileWriter fileWriter = new FileWriter(file1); 
 			fileWriter.write("name,count\n");
 			for (org.apache.spark.sql.Row name : rows) {
 				fileWriter.write(name.getString(0) + "," + name.getDouble(1) + "\n");
@@ -56,7 +58,7 @@ public class CSVReader {
 		}
 	}
 
-	public static void writeIntoExcel1(String file, org.apache.spark.sql.Row[] rows) {
+/*	public static void writeIntoExcel1(String file, org.apache.spark.sql.Row[] rows) {
 		System.out.println("hihssssssssssssssssssssssssssssssssssssssssssssss");
 		Workbook book = new HSSFWorkbook();
 		Sheet sheet = book.createSheet("Data");
@@ -82,10 +84,11 @@ public class CSVReader {
 			e.printStackTrace();
 			System.out.println("Io Exceptions Occurs ");
 		}
-	}
+	}*/
 
 	public static void excelExample(String path) {
 		// Define a configuration to use to interact with Spark
+	// to READ EXCEL FILE
 		SparkConf conf = new SparkConf().setMaster("local[2]").setAppName("Work Count App");
 
 		// Create a Java version of the Spark Context from the configuration
@@ -142,7 +145,8 @@ public class CSVReader {
 		df = context.sql("select name, count*23 as count from temp");
 		df.show();
 		// df.withColumn("countNum", df.col("count")).write().format("com.databricks.spark.csv").save("words.csv");
-
-		writeIntoExcel("output1.csv", df.collect());
+		
+	/*	// if you want to convert above Excel into CSV use following ather wise dont use below.
+		writeIntoCsv("output1.csv", df.collect());*/
 	}
 }
