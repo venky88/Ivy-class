@@ -1,5 +1,5 @@
 package org.learning.spark.ivy.sample;
-
+//pojo program
 public class Name {
 	String name;
 	Double count;
